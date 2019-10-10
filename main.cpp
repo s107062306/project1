@@ -121,8 +121,8 @@ int O[4][4]{
     {1,1,0,0}
 };
 
-void drop(int A[4][4], int loc, int map[10][20]){
-    int place;/*the exact row it would land on*/
+void drop(int A[4][4], int loc, int map[10][20])
+{
     for(int i = 0; i < row;)
     {
         int fin = 1;
@@ -133,13 +133,33 @@ void drop(int A[4][4], int loc, int map[10][20]){
                 if(A[j][k] + map[i+j][loc+k] == 2)
                 {
                     fin = 0;
-                    i++;
-                    continue;
-                } 
+                }
+                if(fin == 0)break; 
             }
-            if(fin == 0)continue;           
+            if(fin == 0)break;           
         }
-        if(fin == 0)continue;
+
+        if(fin == 0){
+            i++;
+            continue;
+        }
+
+        else/*print the block on the map*/
+        {
+            for(int j = 0; j < 4; j++)
+            {
+                for(int k = 0; k < 4; k++)
+                {
+                    map[i+j][loc+k] = map[i+j][loc+k] + A[j][k];
+                }
+            }
+            /*check game over*/
+            for(int j = 0; j < col; j++)
+            {
+                if(map[row][j] == 1)term = 0;
+            }
+        }
+
     }/*decide location*/
 
     for(int i = 0 ; i < col; i++){
@@ -163,19 +183,18 @@ int main(void){
             map[i][j] = 0;
         }
     }
-    char cmd[3];
+    char cmd[4];
     fin >> cmd;
     int loc;//the location of the block
     while(cmd[0]!='E'){
         fin >> loc;
         loc = loc - 1;
-        int stop = 0;
         if(cmd[0] == 'T'){
             if(cmd[1] == '1'){
-                for(int i = row;i >= 0;i--){
+                /*for(int i = row;i >= 0;i--){
                     if(map[i][loc]==1)stop = i+1;//the place the block should stop
                     else if(map[i+1][loc-1] == 1 || map[i+1][loc+1] == 1)stop = i+1;
-                }
+                }*/
             }
             else if(cmd[1] == '2'){
 
