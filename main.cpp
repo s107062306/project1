@@ -3,9 +3,10 @@
 #include <fstream>
 using namespace std;
 
-//name different blocks
+
 int row, col = 0;/*the size of the game matrix*/
 int term = 1; /*to decide whether the game is over or not*/
+//name different blocks
 int T1[4][4]{
     {0,0,0,0},
     {0,0,0,0},
@@ -121,7 +122,7 @@ int O[4][4]{
     {1,1,0,0}
 };
 
-//
+//clear the row
 void clear(int ** map){
     for(int i = 0; i < row+4; i++)
     {
@@ -143,6 +144,7 @@ void clear(int ** map){
                     map[j][k] = map[j+1][k];
                 }
             }
+            continue;
         }
         else
         {
@@ -151,6 +153,7 @@ void clear(int ** map){
     }
 };
 
+//print the dropped block on the map and check if game is over
 void drop(int A[4][4], int loc, int ** map)
 {
     for(int i = 0; i < row;)
@@ -202,7 +205,7 @@ int main(void)
     {
         map[i] = new int [col];
     }
-    for(int i = 0; i < row+4; i++)
+    for(int i = 0; i < row+4; i++)//initialize the map
     {
         for(int j = 0; j < col; j++)
         {
@@ -314,5 +317,13 @@ int main(void)
         clear(map);
         continue;
     }
-    fout
+    for(int i = row + 3; i > -1 ; i--)
+    {
+        for(int j = 0; j < col; j++)
+        {
+            fout <<map[i][j];    
+        }
+        fout<<endl;
+    }
+    return 0;
 }
