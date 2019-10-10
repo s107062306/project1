@@ -121,7 +121,7 @@ int O[4][4]{
     {1,1,0,0}
 };
 
-void drop(int A[4][4], int loc, int map[10][20])
+void drop(int A[4][4], int loc, int ** map)
 {
     for(int i = 0; i < row;)
     {
@@ -159,51 +159,110 @@ void drop(int A[4][4], int loc, int map[10][20])
                 if(map[row][j] == 1)term = 0;
             }
         }
-
-    }/*decide location*/
-
-    for(int i = 0 ; i < col; i++){
-        if(map[row][i] == 1){
-            term = 0;
-            break;
-        }
-        else continue;
-    }/*check game over*/
-
+    }
 };
 
-
-int main(void){
+int main(void)
+{
     ifstream fin("tetris.data");
     ofstream fout("tetris.final");
     fin >>row >>col;
-    int map[row+4][col];
-    for(int i = 0; i < row+4; i++){
-        for(int j = 0; j < col; j++){
+    int **map = new int *[row+4];
+    for(int i = 0; i < row+4; i++)
+    {
+        map[i] = new int [col];
+    }
+    for(int i = 0; i < row+4; i++)
+    {
+        for(int j = 0; j < col; j++)
+        {
             map[i][j] = 0;
         }
     }
     char cmd[4];
     fin >> cmd;
     int loc;//the location of the block
-    while(cmd[0]!='E'){
+    while(cmd[0]!='E')
+    {
         fin >> loc;
         loc = loc - 1;
-        if(cmd[0] == 'T'){
-            if(cmd[1] == '1'){
-                /*for(int i = row;i >= 0;i--){
-                    if(map[i][loc]==1)stop = i+1;//the place the block should stop
-                    else if(map[i+1][loc-1] == 1 || map[i+1][loc+1] == 1)stop = i+1;
-                }*/
+        if(cmd[0] == 'T')
+        {
+            if(cmd[1] == '1')
+            {
+                drop(T1, loc, map);
             }
-            else if(cmd[1] == '2'){
-
+            else if(cmd[1] == '2')
+            {
+                drop(T2, loc, map);
             }
-            else if(cmd[1] == '3'){
-
+            else if(cmd[1] == '3')
+            {
+                drop(T3, loc, map);
             }
-            else if(cmd[1] == '4'){
-
+            else if(cmd[1] == '4')
+            {
+                drop(T4, loc, map);
+            }
+        }
+        else if(cmd[0] == 'L')
+        {
+            if(cmd[1] == '1')
+            {
+                drop(L1, loc, map);
+            }
+            else if(cmd[1] == '2')
+            {
+                drop(L2, loc, map);
+            }
+            else if(cmd[1] == '3')
+            {
+                drop(L3, loc, map);
+            }
+            else if(cmd[1] == '4')
+            {
+                drop(L4, loc, map);
+            }
+        }
+        else if(cmd[0] == 'J')
+        {
+            if(cmd[1] == '1')
+            {
+                drop(J1, loc, map);
+            }
+            else if(cmd[1] == '2')
+            {
+                drop(J2, loc, map);
+            }
+            else if(cmd[1] == '3')
+            {
+                drop(J3, loc, map);
+            }
+            else if(cmd[1] == '4')
+            {
+                drop(J4, loc, map);
+            }
+        }
+        else if(cmd[0] == 'S')
+        {
+            if(cmd[1] == '1')
+            {
+                drop(S1, loc, map);
+            }
+            else if(cmd[1] == '2')
+            {
+                drop(S2, loc, map);
+            }
+        }
+        else if(cmd[0] == 'Z')
+        {
+            if(cmd[1] == '1')
+            {
+                drop(Z1, loc, map);
+            }
+            else if(cmd[1] == '2')
+            {
+                drop(Z2, loc, map);
             }
         }
     }
