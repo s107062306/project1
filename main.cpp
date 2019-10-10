@@ -121,6 +121,36 @@ int O[4][4]{
     {1,1,0,0}
 };
 
+//
+void clear(int ** map){
+    for(int i = 0; i < row+4; i++)
+    {
+        int done = 1;
+        for(int j = 0 ; j < col; j++)
+        {
+            if(map[i][j] == 0)
+            {
+                done = 0;
+                break;
+            }
+        }
+        if(done)
+        {
+            for(int j = i; j < row + 5 - i; j++)
+            {
+                for(int k = 0; k < col; k++)
+                {
+                    map[j][k] = map[j+1][k];
+                }
+            }
+        }
+        else
+        {
+            continue;
+        }
+    }
+};
+
 void drop(int A[4][4], int loc, int ** map)
 {
     for(int i = 0; i < row;)
@@ -280,8 +310,9 @@ int main(void)
         {
             drop(O, loc, map);
         }
+        if(!term)break;
+        clear(map);
+        continue;
     }
-
-
-    
+    fout
 }
