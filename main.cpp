@@ -265,6 +265,21 @@ int main(void)
                 drop(Z2, loc, map);
             }
         }
+        else if(cmd[0] == 'I')
+        {
+            if(cmd[1] == '1')
+            {
+                drop(I1, loc, map);
+            }
+            else if(cmd[1] == '2')
+            {
+                drop(I2, loc, map);
+            }
+        }
+        else if(cmd[0] == 'O')
+        {
+            drop(O, loc, map);
+        }
     }
 
 
