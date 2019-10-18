@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include <fstream>
 using namespace std;
 
@@ -122,32 +121,45 @@ int O[4][4]{
     {1,1,0,0}
 };
 
+void printmap(int ** map)
+{
+    for(int i = row ; i > -1 ; i--)
+    {
+        for(int j = 0; j < col; j++)
+        {
+            cout <<map[i][j];
+        }
+        cout<<endl;
+    }
+    cout<<endl;
+};
+
 //clear the row
 void clear(int ** map){
-    for(int i = 0; i < row+4; i++)
+    for(int i = 0; i < row+4;)
     {
         int done = 1;
         for(int j = 0 ; j < col; j++)
         {
             if(map[i][j] == 0)
             {
+                i++;
                 done = 0;
                 break;
             }
         }
         if(done)
         {
-            for(int j = i; j < row + 5 - i; j++)
+            cout<<"clean line "<< i <<endl;
+            for(int j = i; j < row + 3; j++)
             {
                 for(int k = 0; k < col; k++)
                 {
                     map[j][k] = map[j+1][k];
                 }
+                printmap(map);
             }
-            continue;
-        }
-        else
-        {
+            i = i;
             continue;
         }
     }
@@ -156,86 +168,125 @@ void clear(int ** map){
 //print the dropped block on the map and check if game is over
 void drop(int A[4][4], int loc, int ** map)
 {
-    for(int i = 0; i < row;)
+    cout<< "drop" <<loc+1 <<endl;
+    int t = 0;//the exact row it land
+    int fin = 1;
+    for(int i = row - 1; i > -1;)
     {
-        int fin = 1;
         for(int j = 0; j < 4 ; j++)
         {
             for(int k = 0; k < 4 ; k++)
             {
-                if(A[j][k] + map[i+j][loc+k] == 2)
+                if(A[3-j][k] + map[i+j][loc+k] == 2)
                 {
                     fin = 0;
                 }
-                if(fin == 0)break; 
+                if(fin == 0)break;
             }
-            if(fin == 0)break;           
+            if(fin == 0)break;
         }
 
-        if(fin == 0){
-            i++;
-            continue;
+        if(fin)/*get previous line*/
+        {
+            if(i == 0)/*reach bottom*/
+            {
+                cout<<"land on:" << i <<endl <<endl;
+                for(int j = 0; j < 4; j++)
+                {
+                    for(int k = 0; k < 4; k++)
+                    {
+                        map[i+j][loc+k] = map[i+j][loc+k] + A[3-j][k];
+                    }
+                }
+                printmap(map);
+                clear(map);
+                /*check game over*/
+                for(int j = 0; j < col; j++)
+                {
+                    if(map[row][j] == 1)term = 0;
+                }
+                break;
+            }
+            else
+            {
+                t = i;
+                i--;
+            }
         }
-
         else/*print the block on the map*/
         {
+            if(i == row-1)
+            {
+                term = 0;
+                break;
+            }
+            cout<<"land on:" << t <<endl <<endl;
             for(int j = 0; j < 4; j++)
             {
                 for(int k = 0; k < 4; k++)
                 {
-                    map[i+j][loc+k] = map[i+j][loc+k] + A[j][k];
+                    map[t+j][loc+k] = map[t+j][loc+k] + A[3-j][k];
                 }
             }
+            printmap(map);
+            clear(map);
             /*check game over*/
             for(int j = 0; j < col; j++)
             {
                 if(map[row][j] == 1)term = 0;
             }
+            break;
         }
     }
 };
 
+
 int main(void)
 {
-    ifstream fin("tetris.data");
-    ofstream fout("tetris.final");
+    ifstream fin("Tetris.data");
+    ofstream fout("Tetris.final");
     fin >>row >>col;
     int **map = new int *[row+4];
     for(int i = 0; i < row+4; i++)
     {
-        map[i] = new int [col];
+        map[i] = new int [col+4];
     }
     for(int i = 0; i < row+4; i++)//initialize the map
     {
-        for(int j = 0; j < col; j++)
+        for(int j = 0; j < col+4; j++)
         {
             map[i][j] = 0;
         }
     }
     char cmd[4];
     fin >> cmd;
-    int loc;//the location of the block
     while(cmd[0]!='E')
     {
+        cout<< "read" <<cmd <<endl;
+        int loc;//the location of the block
         fin >> loc;
-        loc = loc - 1;
+        loc--;
         if(cmd[0] == 'T')
         {
             if(cmd[1] == '1')
             {
                 drop(T1, loc, map);
+                goto check;
             }
             else if(cmd[1] == '2')
             {
                 drop(T2, loc, map);
+                goto check;
             }
             else if(cmd[1] == '3')
             {
                 drop(T3, loc, map);
+                goto check;
             }
             else if(cmd[1] == '4')
             {
                 drop(T4, loc, map);
+                goto check;
             }
         }
         else if(cmd[0] == 'L')
@@ -243,18 +294,22 @@ int main(void)
             if(cmd[1] == '1')
             {
                 drop(L1, loc, map);
+                goto check;
             }
             else if(cmd[1] == '2')
             {
                 drop(L2, loc, map);
+                goto check;
             }
             else if(cmd[1] == '3')
             {
                 drop(L3, loc, map);
+                goto check;
             }
             else if(cmd[1] == '4')
             {
                 drop(L4, loc, map);
+                goto check;
             }
         }
         else if(cmd[0] == 'J')
@@ -262,18 +317,22 @@ int main(void)
             if(cmd[1] == '1')
             {
                 drop(J1, loc, map);
+                goto check;
             }
             else if(cmd[1] == '2')
             {
                 drop(J2, loc, map);
+                goto check;
             }
             else if(cmd[1] == '3')
             {
                 drop(J3, loc, map);
+                goto check;
             }
             else if(cmd[1] == '4')
             {
                 drop(J4, loc, map);
+                goto check;
             }
         }
         else if(cmd[0] == 'S')
@@ -281,10 +340,12 @@ int main(void)
             if(cmd[1] == '1')
             {
                 drop(S1, loc, map);
+                goto check;
             }
             else if(cmd[1] == '2')
             {
                 drop(S2, loc, map);
+                goto check;
             }
         }
         else if(cmd[0] == 'Z')
@@ -292,10 +353,12 @@ int main(void)
             if(cmd[1] == '1')
             {
                 drop(Z1, loc, map);
+                goto check;
             }
             else if(cmd[1] == '2')
             {
                 drop(Z2, loc, map);
+                goto check;
             }
         }
         else if(cmd[0] == 'I')
@@ -303,25 +366,35 @@ int main(void)
             if(cmd[1] == '1')
             {
                 drop(I1, loc, map);
+                goto check;
             }
             else if(cmd[1] == '2')
             {
                 drop(I2, loc, map);
+                goto check;
             }
         }
         else if(cmd[0] == 'O')
         {
             drop(O, loc, map);
+            goto check;
         }
-        if(!term)break;
-        clear(map);
-        continue;
+        check:
+        if(term){
+            fin>>cmd;
+            continue;
+        }
+        else {
+            break;
+        }
     }
-    for(int i = row + 3; i > -1 ; i--)
+
+    cout<<"surprise mother fucker" <<endl;
+    for(int i = row - 1; i > -1; i--)
     {
         for(int j = 0; j < col; j++)
         {
-            fout <<map[i][j];    
+            fout <<map[i][j];
         }
         fout<<endl;
     }
